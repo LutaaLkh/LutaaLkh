@@ -1,12 +1,13 @@
 // src/graphql/resolvers.js
-import user from '../../models/User.js'; // MongoDB-ийн хэрэглэгчийн модель
+import User from '../../models/User.js';  // Моделийг зөв дуудаж авсан байна
+import Card from '../../models/Card.js'; // Карт загварыг импортлох
 
 const Userresolvers = {
   Query: {
     // Бүх хэрэглэгчийг авах
     getUsers: async () => {
       try {
-        return await User.find({ deleted: false }); // Устгаагүй хэрэглэгчдийг авч ирэх
+        return await User.find({ deleted: false }).populate('cards'); // Cards-г populate хийх
       } catch (error) {
         throw new Error('Error fetching users: ' + error.message);
       }
@@ -15,7 +16,7 @@ const Userresolvers = {
     // Нэг хэрэглэгчийг ID-ээр нь авах
     getUser: async (_, { id }) => {
       try {
-        const user = await User.findById(id);
+        const user = await User.findById(id).populate('cards'); // Cards-г populate хийх
         if (!user || user.deleted) {
           throw new Error('User not found or deleted');
         }
@@ -37,7 +38,7 @@ const Userresolvers = {
           email,
           password,
           createdBy,
-          deleted: false, // Шинээр үүсгэж буй хэрэглэгч устгаагүй
+          deleted: false,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         });
@@ -83,7 +84,7 @@ const Userresolvers = {
       try {
         const deletedUser = await User.findByIdAndUpdate(
           id,
-          { $set: { deleted: true } }, // `deleted` талбарийг `true` болгож устгана
+          { $set: { deleted: true } },
           { new: true }
         );
 
@@ -94,6 +95,29 @@ const Userresolvers = {
         return deletedUser;
       } catch (error) {
         throw new Error('Error deleting user: ' + error.message);
+      }
+    },
+
+    // Хэрэглэгчид карт нэмэх
+    addCardToUser: async (_, { userId, cardId }) => {
+      try {
+        const user = await User.findById(userId);
+        if (!user) {
+          throw new Error('User not found');
+        }
+
+        const card = await Card.findById(cardId);
+        if (!card) {
+          throw new Error('Card not found');
+        }
+
+        // Хэрэглэгчийн картууд руу шинэ карт нэмэх
+        user.cards.push(cardId);
+        await user.save();
+
+        return user;
+      } catch (error) {
+        throw new Error('Error adding card to user: ' + error.message);
       }
     },
   },

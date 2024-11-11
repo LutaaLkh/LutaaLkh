@@ -1,48 +1,48 @@
-// src/graphql/schema.js
-import { gql } from 'apollo-server-express';
-
-const userTypeDefs = gql`
-  # Хэрэглэгчийн оруулах мэдээллийн төрөл
-   type Query {
-    # Бүх хэрэглэгчийг авах
-    getUsers: [User]
-    getUser(id: ID!): User
-  }
-  input UserInput {
-    name: String!
-    email: String!
-    password: String!
-    createdBy: String
-  }
-
-  # Хэрэглэгчийн мэдээллийн төрөл
+// graphql/schemas/user.js
+import { gql } from 'apollo-server';
+import cardTypeDefs from '../card-graphql/schemaCard.js'; // Эндээс Card схемийг импортлох
+export const userTypeDefs = gql`
+  # Хэрэглэгчийн төрөл
+  ${cardTypeDefs}
   type User {
     id: ID!
     name: String!
     email: String!
-    password: String!
-    createdAt: String
-    updatedAt: String
     createdBy: String
-    deleted: Boolean
+    deleted: Boolean!
+    createdAt: String!
+    updatedAt: String!
+    cards: [Card!]! # Хэрэглэгчийн холбогдсон картууд
   }
 
-  # Асуугчдын үндсэн төрөл
+  # Хэрэглэгчийн шинээр үүсгэх мэдээллийн төрөл
+  input CreateUserInput {
+    name: String!
+    email: String!
+    password: String!
+    createdBy: String
+  }
+
+  # Хэрэглэгчийн мэдээлэл шинэчлэх төрөл
+  input UpdateUserInput {
+    name: String
+    email: String
+    password: String
+    updatedBy: String
+  }
+
+  # Хүсэлтүүд (Queries)
   type Query {
-    # Бүх хэрэглэгчийг авах
-    getUsers: [User]
-    # Нэг хэрэглэгчийг ID-ээр нь авах
-    getUser(id: ID!): User
+    getUsers: [User!]! # Бүх хэрэглэгчийг авах
+    getUser(id: ID!): User # Нэг хэрэглэгчийг авах
   }
 
-  # Мутациуд
+  # Өөрчлөлтүүд (Mutations)
   type Mutation {
-    # Хэрэглэгчийг шинээр үүсгэх
-    createUser(input: UserInput!): User
-    # Хэрэглэгчийн мэдээллийг шинэчлэх
-    updateUser(id: ID!, input: UserInput!): User
-    # Хэрэглэгчийг устгах
+    createUser(input: CreateUserInput!): User
+    updateUser(id: ID!, input: UpdateUserInput!): User
     deleteUser(id: ID!): User
+    addCardToUser(userId: ID!, cardId: ID!): User # Хэрэглэгчид карт нэмэх
   }
 `;
 

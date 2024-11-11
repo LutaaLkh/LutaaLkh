@@ -1,11 +1,14 @@
+// graphql/schemas/card.js
 import { gql } from 'apollo-server-express';
 
-const CardDefs = gql`
+export const cardTypeDefs = gql`
+  # Аюулгүй ажиллагааны арга хэмжээний төрөл
   type SafetyMeasure {
     name: String!
     details: String!
   }
 
+  # Байгууллагын мэдээллийн төрөл
   type Organization {
     name: String!
     location: String
@@ -13,6 +16,7 @@ const CardDefs = gql`
     document_number: String
   }
 
+  # Технологийн картын төрөл
   type TechnologyCard {
     title: String!
     description: String!
@@ -21,6 +25,7 @@ const CardDefs = gql`
     goal: String!
   }
 
+  # Картын төрөл
   type Card {
     id: ID!
     technology_card: TechnologyCard!
@@ -29,11 +34,13 @@ const CardDefs = gql`
     safety_measures: [SafetyMeasure]
   }
 
+  # Аюулгүй ажиллагааны арга хэмжээний орц
   input SafetyMeasureInput {
     name: String!
     details: String!
   }
 
+  # Байгууллагын орц
   input OrganizationInput {
     name: String!
     location: String
@@ -41,6 +48,7 @@ const CardDefs = gql`
     document_number: String
   }
 
+  # Технологийн картын орц
   input TechnologyCardInput {
     title: String!
     description: String!
@@ -49,6 +57,7 @@ const CardDefs = gql`
     goal: String!
   }
 
+  # Картын орц
   input CardInput {
     technology_card: TechnologyCardInput!
     risk_sources: [String]
@@ -56,11 +65,13 @@ const CardDefs = gql`
     safety_measures: [SafetyMeasureInput]
   }
 
+  # Хүсэлтүүд (Queries)
   type Query {
     getCards: [Card]
     getCard(id: ID!): Card
   }
 
+  # Өөрчлөлтүүд (Mutations)
   type Mutation {
     createCard(input: CardInput!): Card
     updateCard(id: ID!, input: CardInput!): Card
@@ -68,4 +79,4 @@ const CardDefs = gql`
   }
 `;
 
-export default CardDefs;
+export default cardTypeDefs;
