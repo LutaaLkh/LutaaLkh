@@ -1,8 +1,8 @@
 // src/server.js
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
-import typeDefs from './graphql/schema.js';
-import resolvers from './graphql/resolvers.js';
+import typeDefs from './graphql/merge-graphql/Schema.js';
+import resolvers from './graphql/merge-graphql/resolvers.js'; 
 import connectDB from './config/database.js'; // database холболтыг импортлох
 
 const startServer = async () => {
@@ -12,7 +12,9 @@ const startServer = async () => {
   await connectDB();
 
   // Apollo Server үүсгэх
-  const server = new ApolloServer({ typeDefs, resolvers });
+  const server = new ApolloServer({ 
+     typeDefs, 
+     resolvers});
   await server.start();
   server.applyMiddleware({ app });
 

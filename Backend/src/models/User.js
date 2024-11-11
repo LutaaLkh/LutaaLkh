@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema(
     deleted: { type: Boolean, default: false },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
+    cards:[{type:mongoose.Schema.Types.ObjectId, Card}],
   },
   { timestamps: true }
 );
