@@ -9,7 +9,7 @@ export const userTypeDefs = gql`
     name: String!
     email: String!
     createdBy: String
-    deleted: Boolean!
+    deleted: Boolean
     createdAt: String!
     updatedAt: String!
     cards: [Card!]! # Хэрэглэгчийн холбогдсон картууд

@@ -1,0 +1,76 @@
+mutation createUser($input: CreateUserInput!) {
+  createUser(input: $input) {
+    name
+    email
+    createdAt
+    createdBy
+    deleted
+    cards {
+      related_documents
+      risk_sources
+      safety_measures {
+        details
+        name
+      }
+      technology_card {
+        description
+        goal
+        title
+        TK_number
+        organization {
+          equipment
+          location
+          name
+        }
+      }
+    }
+  }
+}
+query GetUser($id: ID!) {
+  getUser(id: $id) {
+    id
+    name
+    email
+    cards {
+      related_documents
+      risk_sources
+      safety_measures {
+        name
+        details
+      }
+      technology_card {
+        title
+        goal
+        organization {
+          equipment
+          location
+          name
+
+        }
+      }
+      
+    }
+  }
+}
+query getUsers{
+  getUsers {
+    id
+    name
+    email
+    createdAt
+    createdBy
+    cards {
+      id
+      # Card талбаруудыг энд оруулна
+    }
+  }
+}
+mutation UpdateUser($id: ID!, $input: UserUpdateInput!) {
+  updateUser(id: $id, input: $input) {
+    id
+    name
+    email
+    createdAt
+    createdBy
+  }
+}
